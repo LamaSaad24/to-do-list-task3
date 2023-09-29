@@ -70,7 +70,7 @@ if ("undefined" != typeof Storage) {
 
 addBtn.addEventListener("click", function () {
     let title = taskInput.value;
-    if (!checkIfUnique(title)) {
+    if (!checkIfUnique(title).length) {
         let task = {
             'title': title,
             'slug': generateSlug(title)
