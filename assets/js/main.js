@@ -20,7 +20,7 @@ function displayTasks() {
     for (let i = 0; i < tasks.length; i++)
         data += `
         <div class="item col-3  my-2  d-flex flex-column justify-content-center align-items-center">
-        <h2 class="mb-3">${tasks[i]}</h2>
+        <h2 class="mb-3">${tasks[i].title}</h2>
         <div class="d-flex flex-row justify-content-end mb-1">
             <a href="#" class="text-primary" data-mdb-toggle="tooltip" title="Edit todo" onclick="editTask(${i})"><i
                     class="fas fa-pencil-alt me-3"></i></a>
@@ -57,7 +57,7 @@ function displayBtnAdd() {
 }
 
 getTasksFromLocalStorage();
-//displayTasks()
+displayTasks()
 
 if ("undefined" != typeof Storage) {
     console.log("LocalStorage is supported.");
@@ -65,13 +65,31 @@ if ("undefined" != typeof Storage) {
     toDo.innerHTML =
         '<h1 class="bg-danger py-2 text-center my-5">LocalStorage is not supported in this browser.</h1>';
 }
+
 addBtn.addEventListener("click", function () {
-    var t = taskInput.value;
-    tasks.push(t),
+    let title = taskInput.value;
+    if(!checkIfUnique(title)){
+        let task = {
+            'title':title,
+            'slug' : generateSlug(title)
+        }
+        tasks.push(task),
         clearTaskInput(),
         setTasksToLocalStorage(tasks),
         displayTasks();
+    }else{
+        showError();
+    }
 });
+
+function checkIfUnique(title){
+    return tasks.filter((e)=>{return e.title==title});
+}
+
+function generateSlug(title){
+    let slug = title.toLowerCase().replace(/[-+_=]/g,'').replace(/ /g,'-');
+    return slug;
+}
 
 let id;
 
@@ -91,3 +109,8 @@ function updateTask(t, e) {
 editBtn.addEventListener("click", function () {
     updateTask(id, taskInput.value);
 });
+
+
+function showError(){
+    alert("the name should be unique")
+}
