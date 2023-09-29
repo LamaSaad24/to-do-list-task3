@@ -6,9 +6,11 @@ let editBtn = document.getElementById("editBtn");
 let tasks = [];
 
 function getTasksFromLocalStorage() {
-    tasks = localStorage.getItem("tasks")
-        ? JSON.parse(localStorage.getItem("tasks"))
-        : (localStorage.setItem("tasks", tasks), []);
+    if(localStorage.getItem("tasks")){
+        tasks =JSON.parse(localStorage.getItem("tasks"))
+    }else{
+        localStorage.setItem("tasks", []);
+    }
 }
 
 function setTasksToLocalStorage(t) {
