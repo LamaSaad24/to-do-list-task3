@@ -1,4 +1,24 @@
-let toDo=document.getElementById("toDo"),taskInput=document.getElementById("task"),list=document.getElementById("list"),addBtn=document.getElementById("addBtn"),editBtn=document.getElementById("editBtn"),tasks=[];function getTasksFromLocalStorage(){tasks=localStorage.getItem("tasks")?JSON.parse(localStorage.getItem("tasks")):(localStorage.setItem("tasks",tasks),[])}function setTasksToLocalStorage(t){localStorage.setItem("tasks",JSON.stringify(t))}function displayTasks(){let e="";for(let t=0;t<tasks.length;t++)e+=`
+let toDo = document.getElementById("toDo");
+let taskInput = document.getElementById("task");
+let list = document.getElementById("list");
+let addBtn = document.getElementById("addBtn");
+let editBtn = document.getElementById("editBtn");
+let tasks = [];
+
+function getTasksFromLocalStorage() {
+    tasks = localStorage.getItem("tasks")
+        ? JSON.parse(localStorage.getItem("tasks"))
+        : (localStorage.setItem("tasks", tasks), []);
+}
+
+function setTasksToLocalStorage(t) {
+    localStorage.setItem("tasks", JSON.stringify(t));
+}
+
+function displayTasks() {
+    let data = "";
+    for (let i = 0; i < tasks.length; i++)
+        data += `
         <div class="item col-3  my-2  d-flex flex-column justify-content-center align-items-center">
         <h2 class="mb-3">${tasks[i]}</h2>
         <div class="d-flex flex-row justify-content-end mb-1">
