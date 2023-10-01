@@ -1,8 +1,8 @@
-let toDo = document.getElementById("toDo");
-let taskInput = document.getElementById("task");
-let list = document.getElementById("list");
-let addBtn = document.getElementById("addBtn");
-let editBtn = document.getElementById("editBtn");
+const toDo = document.getElementById("toDo");
+const taskInput = document.getElementById("task");
+const list = document.getElementById("list");
+const addBtn = document.getElementById("addBtn");
+const editBtn = document.getElementById("editBtn");
 let tasks = [];
 
 function getTasksFromLocalStorage() {
@@ -58,11 +58,11 @@ function displayBtnAdd() {
     addBtn.classList.remove("d-none");
 }
 
-getTasksFromLocalStorage();
-displayTasks()
 
 if ("undefined" != typeof Storage) {
     console.log("LocalStorage is supported.");
+    getTasksFromLocalStorage();
+    displayTasks()
 } else {
     toDo.innerHTML =
         '<h1 class="bg-danger py-2 text-center my-5">LocalStorage is not supported in this browser.</h1>';
@@ -96,16 +96,24 @@ function generateSlug(title) {
 let id;
 
 function editTask(t) {
-    (id = t), (taskInput.value = tasks[id]), removeBtnAdd(), displayBtnEdit();
+    (id = t), (taskInput.value = tasks[id].title), removeBtnAdd(), displayBtnEdit();
 }
 
 function updateTask(t, e) {
-    (tasks[t] = e),
+    if (!checkIfUnique(e).length) {
+        let task = {
+            'title': e,
+            'slug': generateSlug(e),
+        }
+        tasks[t] = task
         removeBtnEdit(),
-        displayBtnAdd(),
-        clearTaskInput(),
-        setTasksToLocalStorage(tasks),
-        displayTasks();
+            displayBtnAdd(),
+            clearTaskInput(),
+            setTasksToLocalStorage(tasks),
+            displayTasks();
+    } else {
+        showError()
+    }
 }
 
 editBtn.addEventListener("click", function () {

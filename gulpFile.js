@@ -14,4 +14,12 @@ gulp.task('minify-js', function () {
         .pipe(gulp.dest('assets/js')); // Destination folder for minified JavaScript files
 });
 
-gulp.task('default', gulp.parallel('minify-css', 'minify-js'));
+gulp.task('minify-images',async function(){
+    const imagemin = await import('gulp-imagemin')
+    return gulp
+    .src('assets/img/*')
+    .pipe(imagemin.default())
+    .pipe(gulp.dest('assets/img'))
+})
+
+gulp.task('default', gulp.parallel('minify-css', 'minify-js','minify-images'));
