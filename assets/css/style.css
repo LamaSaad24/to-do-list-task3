@@ -1,1 +1,21 @@
-.icon{width:100px}.card input:focus{box-shadow:none!important}.card{border:0}.item{background-color:#2e2929;box-shadow:0 0 5px 4PX #fff;color:#fff;padding:20px}
+section{
+    background-color: #efefef;
+}
+.icon {
+    width: 100px
+}
+
+.card input:focus {
+    box-shadow: none !important
+}
+
+.card {
+    border: 0
+}
+
+.item {
+    background-color: #FFFFFF;
+    color: #2e2929;
+    padding: 20px;
+    border-radius: 5px;
+}

@@ -3,13 +3,14 @@ const taskInput = document.getElementById("task");
 const list = document.getElementById("list");
 const addBtn = document.getElementById("addBtn");
 const editBtn = document.getElementById("editBtn");
+const keywordInput = document.getElementById("keyword");
 
 let tasks = [];
 let id;
 
-function initApp(){
+function initApp() {
     getTasksFromLocalStorage();
-    displayTasks()
+    displayTasks(tasks)
 }
 
 function getTasksFromLocalStorage() {
@@ -24,19 +25,21 @@ function setTasksToLocalStorage(tasks) {
     localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-function displayTasks() {
+function displayTasks(tasks) {
     let data = "";
     for (let i = 0; i < tasks.length; i++)
         data += `
-        <div class="item col-3  my-2  d-flex flex-column justify-content-center align-items-center">
-        <h2 class="mb-3">${tasks[i].title}</h2>
-        <div class="d-flex flex-row justify-content-end mb-1">
-            <a href="#" class="text-primary" data-mdb-toggle="tooltip" title="Edit todo" onclick="editTask(${i})"><i
-                    class="fas fa-pencil-alt me-3"></i></a>
-            <a href="#" class="text-danger" data-mdb-toggle="tooltip"
-                title="Delete todo" onclick="deleteTask(${i})"><i class="fas fa-trash-alt"></i></a>
+        <div class="col-3  my-2  d-flex flex-column justify-content-center align-items-center">
+            <div class="item">
+                <h2 class="mb-3">${tasks[i].title}</h2>
+                <div class="d-flex flex-row justify-content-center mb-1">
+                    <a href="#" class="text-primary" data-mdb-toggle="tooltip" title="Edit todo"
+                        onclick="editTask(${i})"><i class="fas fa-pencil-alt me-3"></i></a>
+                    <a href="#" class="text-danger" data-mdb-toggle="tooltip" title="Delete todo"
+                        onclick="deleteTask(${i})"><i class="fas fa-trash-alt"></i></a>
+                </div>
+            </div>
         </div>
-    </div>
         `;
     list.innerHTML = data;
 }
@@ -46,7 +49,7 @@ function clearTaskInput() {
 }
 
 function deleteTask(task) {
-    tasks.splice(task, 1), setTasksToLocalStorage(tasks), displayTasks();
+    tasks.splice(task, 1), setTasksToLocalStorage(tasks), displayTasks(tasks);
 }
 
 function removeBtnEdit() {
@@ -84,7 +87,7 @@ addBtn.addEventListener("click", function () {
         tasks.push(task),
             clearTaskInput(),
             setTasksToLocalStorage(tasks),
-            displayTasks();
+            displayTasks(tasks);
     } else {
         showError();
     }
@@ -115,7 +118,7 @@ function updateTask(index, title) {
     displayBtnAdd()
     clearTaskInput()
     setTasksToLocalStorage(tasks)
-    displayTasks()
+    displayTasks(tasks)
 }
 
 editBtn.addEventListener("click", function () {
@@ -131,4 +134,12 @@ function showError() {
     alert("the title should be unique")
 }
 
+keywordInput.addEventListener('keyup',function(){
+    keyword = keywordInput.value
+    searchByTaskTitle(keyword)
+})
 
+function searchByTaskTitle(keyword) {
+    result = tasks.filter((task)=>{return task.title.toLowerCase().includes(keyword.toLowerCase())})
+    displayTasks(result)
+}
