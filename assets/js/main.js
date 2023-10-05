@@ -1,9 +1,16 @@
-let toDo = document.getElementById("toDo");
-let taskInput = document.getElementById("task");
-let list = document.getElementById("list");
-let addBtn = document.getElementById("addBtn");
-let editBtn = document.getElementById("editBtn");
+const toDo = document.getElementById("toDo");
+const taskInput = document.getElementById("task");
+const list = document.getElementById("list");
+const addBtn = document.getElementById("addBtn");
+const editBtn = document.getElementById("editBtn");
+
 let tasks = [];
+let id;
+
+function initApp(){
+    getTasksFromLocalStorage();
+    displayTasks()
+}
 
 function getTasksFromLocalStorage() {
     if (localStorage.getItem("tasks")) {
@@ -13,8 +20,8 @@ function getTasksFromLocalStorage() {
     }
 }
 
-function setTasksToLocalStorage(t) {
-    localStorage.setItem("tasks", JSON.stringify(t));
+function setTasksToLocalStorage(tasks) {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
 function displayTasks() {
@@ -22,12 +29,12 @@ function displayTasks() {
     for (let i = 0; i < tasks.length; i++)
         data += `
         <div class="item col-3  my-2  d-flex flex-column justify-content-center align-items-center">
-        <h2 class="mb-3">${tasks[t].title}</h2>
+        <h2 class="mb-3">${tasks[i].title}</h2>
         <div class="d-flex flex-row justify-content-end mb-1">
-            <a href="#" class="text-primary" data-mdb-toggle="tooltip" title="Edit todo" onclick="editTask(${t})"><i
+            <a href="#" class="text-primary" data-mdb-toggle="tooltip" title="Edit todo" onclick="editTask(${i})"><i
                     class="fas fa-pencil-alt me-3"></i></a>
             <a href="#" class="text-danger" data-mdb-toggle="tooltip"
-                title="Delete todo" onclick="deleteTask(${t})"><i class="fas fa-trash-alt"></i></a>
+                title="Delete todo" onclick="deleteTask(${i})"><i class="fas fa-trash-alt"></i></a>
         </div>
     </div>
         `;
@@ -38,8 +45,8 @@ function clearTaskInput() {
     taskInput.value = "";
 }
 
-function deleteTask(t) {
-    tasks.splice(t, 1), setTasksToLocalStorage(tasks), displayTasks();
+function deleteTask(task) {
+    tasks.splice(task, 1), setTasksToLocalStorage(tasks), displayTasks();
 }
 
 function removeBtnEdit() {
@@ -58,11 +65,10 @@ function displayBtnAdd() {
     addBtn.classList.remove("d-none");
 }
 
-getTasksFromLocalStorage();
-displayTasks()
 
-if ("undefined" != typeof Storage) {
+if ("undefined" !== typeof Storage) {
     console.log("LocalStorage is supported.");
+    initApp()
 } else {
     toDo.innerHTML =
         '<h1 class="bg-danger py-2 text-center my-5">LocalStorage is not supported in this browser.</h1>';
@@ -73,7 +79,7 @@ addBtn.addEventListener("click", function () {
     if (!checkIfUnique(title).length) {
         let task = {
             'title': title,
-            'slug': generateSlug(title)
+            'slug': generateSlug(title),
         }
         tasks.push(task),
             clearTaskInput(),
@@ -85,7 +91,7 @@ addBtn.addEventListener("click", function () {
 });
 
 function checkIfUnique(title) {
-    return tasks.filter((e) => { return e.title == title });
+    return tasks.filter((task) => { return task.title === title });
 }
 
 function generateSlug(title) {
@@ -93,26 +99,34 @@ function generateSlug(title) {
     return slug;
 }
 
-let id;
 
-function editTask(t) {
-    (id = t), (taskInput.value = tasks[id]), removeBtnAdd(), displayBtnEdit();
+
+function editTask(index) {
+    id = index
+    taskInput.value = tasks[id].title
+    removeBtnAdd()
+    displayBtnEdit()
 }
 
-function updateTask(t, e) {
-    (tasks[t] = e),
-        removeBtnEdit(),
-        displayBtnAdd(),
-        clearTaskInput(),
-        setTasksToLocalStorage(tasks),
-        displayTasks();
+function updateTask(index, title) {
+    tasks[index].title = title
+    tasks[index].slug = generateSlug(title)
+    removeBtnEdit()
+    displayBtnAdd()
+    clearTaskInput()
+    setTasksToLocalStorage(tasks)
+    displayTasks()
 }
 
 editBtn.addEventListener("click", function () {
-    updateTask(id, taskInput.value);
+    if (!checkIfUnique(taskInput.value).length) {
+        updateTask(id, taskInput.value);
+    } else {
+        showError()
+    }
 });
 
 
 function showError() {
-    alert("the name should be unique")
+    alert("the title should be unique")
 }
