@@ -2,6 +2,7 @@ const gulp = require('gulp');
 const cleanCSS = require('gulp-clean-css');
 const uglify = require('gulp-uglify');
 
+
 gulp.task('minify-css', function () {
     return gulp.src('assets/css/*.css') // Path to your CSS files
         .pipe(cleanCSS())
@@ -13,5 +14,18 @@ gulp.task('minify-js', function () {
         .pipe(uglify())
         .pipe(gulp.dest('assets/js')); // Destination folder for minified JavaScript files
 });
+
+
+gulp.task('minify-images', async function () {
+    const imagemin = await import('gulp-imagemin');
+
+
+    return gulp
+        .src('assets/img/*')
+        .pipe(imagemin.default())
+        .pipe(gulp.dest('assets/img'));
+})
+
+
 
 gulp.task('default', gulp.parallel('minify-css', 'minify-js'));
